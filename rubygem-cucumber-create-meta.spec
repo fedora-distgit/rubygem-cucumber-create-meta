@@ -4,16 +4,16 @@
 Name: rubygem-%{gem_name}
 Version: 6.0.1
 Release: 1%{?dist}
-Summary: cucumber-create-meta-6.0.1
+Summary: Produce the meta message for Cucumber Ruby.
 License: MIT
 URL: https://github.com/cucumber/create-meta-ruby
 Source0: https://rubygems.org/gems/%{gem_name}-%{version}.gem
 BuildRequires: ruby(release)
 BuildRequires: rubygems-devel
 BuildRequires: ruby >= 2.3
-# BuildRequires: rubygem(rspec) >= 3.10
-# BuildRequires: rubygem(rspec) < 4
-# BuildRequires: rubygem(rspec) >= 3.10.0
+BuildRequires: rubygem(rspec)
+BuildRequires: rubygem(sys-uname)
+BuildRequires: rubygem(cucumber-messages)
 BuildArch: noarch
 
 %description
@@ -32,11 +32,7 @@ Documentation for %{name}.
 %setup -q -n %{gem_name}-%{version}
 
 %build
-# Create the gem as gem install only works on a gem file
 gem build ../%{gem_name}-%{version}.gemspec
-
-# %%gem_install compiles any C extensions and installs the gem into ./%%gem_dir
-# by default, so that we can move it into the buildroot in %%install
 %gem_install
 
 %install
@@ -44,11 +40,9 @@ mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-
-
 %check
 pushd .%{gem_instdir}
-# rspec spec
+rspec spec
 popd
 
 %files
